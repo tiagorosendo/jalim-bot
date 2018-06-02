@@ -2,7 +2,7 @@
   "name": "jalim-bot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "jalim.js",
   "scripts": {
     "wakeup": "nodemon jalim.js"
   },
@@ -14,6 +14,10 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/tiagorosendo/jalim-bot/issues"
+  },
+  "engines": {
+    "node": ">=8.11.1",
+    "npm": ">=5.6.0"
   },
   "homepage": "https://github.com/tiagorosendo/jalim-bot#readme",
   "dependencies": {
