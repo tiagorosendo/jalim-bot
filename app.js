@@ -1,5 +1,6 @@
 const botBuilder = require('botbuilder');
 const restify = require('restify');
+const request = require('request');
 require('dotenv').load();
 
 
@@ -30,7 +31,18 @@ var intents = new botBuilder.IntentDialog({ recognizers: [recognizer] })
     // If User greeted the bot
     .matches('greeting', (session, args) => {
         session.send('Hi There');
-    }).onDefault((session) => {
+    })
+    .matches('applicationhealth', (session, args) => {
+        session.send('Vou verificar, pera ae!')
+        session.sendTyping();
+
+        request.get('https://split.braspag.com.br/api/healthcheck').then((result) => {
+            session.send('Olha o resultado da Split API: ', result);
+        }).catch((err) => {
+            session.send('Ixi, nao consegui chamar o HealthCheck da SplitAPI: ', result);
+        });
+    })
+    .onDefault((session) => {
         session.send('Sorry, I did not understand.', session.message.text);
     });
 

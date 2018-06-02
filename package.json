@@ -4,7 +4,7 @@
   "description": "",
   "main": "jalim.js",
   "scripts": {
-    "start": "nodemon jalim.js"
+    "start": "nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -26,6 +26,7 @@
     "restify": "^7.2.0"
   },
   "devDependencies": {
-    "nodemon": "^1.17.5"
+    "nodemon": "^1.17.5",
+    "request": "^2.87.0"
   }
 }
