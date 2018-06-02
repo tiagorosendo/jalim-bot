@@ -1,6 +1,6 @@
 const botBuilder = require('botbuilder');
 const restify = require('restify');
-const request = require('request');
+const request = require('request-promise');
 require('dotenv').load();
 
 
@@ -34,9 +34,8 @@ var intents = new botBuilder.IntentDialog({ recognizers: [recognizer] })
     })
     .matches('ApplicationsHealth', (session, args) => {
         session.send('Vou verificar, pera ae!')
-        session.sendTyping();
 
-        request.get('https://split.braspag.com.br/api/healthcheck').then((result) => {
+        request({ uri: 'https://split.braspag.com.br/api/healthcheck', json: true }).then((result) => {
             session.send('Olha o resultado da Split API: ', result);
         }).catch((err) => {
             session.send('Ixi, nao consegui chamar o HealthCheck da SplitAPI: ', result);
