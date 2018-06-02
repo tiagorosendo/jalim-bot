@@ -35,10 +35,10 @@ var intents = new botBuilder.IntentDialog({ recognizers: [recognizer] })
     .matches('ApplicationsHealth', (session, args) => {
         session.send('Vou verificar, pera ae!')
 
-        request({ uri: 'https://split.braspag.com.br/api/healthcheck', json: true }).then((result) => {
-            session.send('Olha o resultado da Split API: ', result);
+        request({ uri: 'https://split.braspag.com.br/api/healthcheck', json: true }).then((result) => {            
+            session.send(`Olha o resultado da Split API: ${JSON.stringify(result)}`);
         }).catch((err) => {
-            session.send('Ixi, nao consegui chamar o HealthCheck da SplitAPI: ', result);
+            session.send(`Ixi, nao consegui chamar o HealthCheck da SplitAPI: ${err.toString()}`);
         });
     })
     .onDefault((session) => {
