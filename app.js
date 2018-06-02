@@ -32,7 +32,7 @@ var intents = new botBuilder.IntentDialog({ recognizers: [recognizer] })
     .matches('greeting', (session, args) => {
         session.send('Hi There');
     })
-    .matches('applicationhealth', (session, args) => {
+    .matches('ApplicationsHealth', (session, args) => {
         session.send('Vou verificar, pera ae!')
         session.sendTyping();
 
