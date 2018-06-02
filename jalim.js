@@ -18,7 +18,7 @@ var connector = new botBuilder.ChatConnector({
 var bot = new botBuilder.UniversalBot(connector);
 server.post('/api/messages', connector.listen());
 
-server.get('/api/status', (req, res) => res.sendRaw('oi'))
+server.get('/api/ping', (req, res) => res.sendRaw('pong'))
 
 const LuisModelUrl = process.env.LUIS_MODEL_URL;
 
