@@ -22,8 +22,10 @@ const controller = Botkit.slackbot({
 controller.spawn({
     token: process.env.SLACK_BOT_TOKEN
 }).startRTM(function (err) {
-    if (err)
+    if (err){
+        console.log(err);
         throw new Error(err);
+    }
 });
 
 controller.middleware.receive.use(luis.middleware.receive(luisOptions));
