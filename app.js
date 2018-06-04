@@ -31,7 +31,7 @@ controller.spawn({
 controller.middleware.receive.use(luis.middleware.receive(luisOptions));
 
 controller.hears(['applicationshealth'], ['direct_message', 'direct_mention', 'mention'], luis.middleware.hereIntent, (bot, message) => {
-    bot.reply(message, 'Hmmm, pera ae!')
+    bot.reply(message, 'Hmmmm, pera ae!')
 
     request({ uri: 'https://split.braspag.com.br/api/healthcheck', json: true }).then((result) => {
         bot.reply(message, `Olha o resultado da Split API: ${JSON.stringify(result)}`);
@@ -42,7 +42,7 @@ controller.hears(['applicationshealth'], ['direct_message', 'direct_mention', 'm
 
 
 controller.hears(['greeting'], ['direct_message', 'direct_mention', 'mention'], luis.middleware.hereIntent, (bot, message) => {
-    bot.reply(message, "Fala ae, to acordado!");
+    bot.reply(message, "Fala aee, to acordado!");
 });
 
 controller.hears('.*', ['direct_message', 'direct_mention', 'mention'], (bot, message) => {
