@@ -13,7 +13,10 @@ if (!process.env.LUIS_MODEL_URL) {
     process.exit(1);
 }
 
-const luisOptions = { serviceUri: process.env.LUIS_MODEL_URL };
+const luisOptions = {
+    serviceUri: process.env.LUIS_MODEL_URL,
+    minThreshold: 0.3
+};
 
 const controller = Botkit.slackbot({
     debug: false
@@ -22,7 +25,7 @@ const controller = Botkit.slackbot({
 controller.spawn({
     token: process.env.SLACK_BOT_TOKEN
 }).startRTM(function (err) {
-    if (err){
+    if (err) {
         console.log(err);
         throw new Error(err);
     }
@@ -38,6 +41,11 @@ controller.hears(['applicationshealth'], ['direct_message', 'direct_mention', 'm
     }).catch((err) => {
         bot.reply(message, `Ixi, nao consegui chamar o HealthCheck da SplitAPI: ${err.toString()}`);
     });
+});
+
+controller.hears(['logquery'], ['direct_message', 'direct_mention', 'mention'], luis.middleware.hereIntent, (bot, message) => {
+    bot.reply(message, 'Marca ae que vou olhar o log')
+    bot.reply(message, `Segura ai os detalhes do requestId: ${message.entities[0].entity}`)
 });
 
 controller.hears(['greeting'], ['direct_message', 'direct_mention', 'mention'], luis.middleware.hereIntent, (bot, message) => {
