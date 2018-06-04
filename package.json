@@ -2,9 +2,9 @@
   "name": "jalim-bot",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "jalim.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "node jalim.js",
     "dev": "nodemon app.js"
   },
   "repository": {
