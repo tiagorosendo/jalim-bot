@@ -40,7 +40,6 @@ controller.hears(['applicationshealth'], ['direct_message', 'direct_mention', 'm
     });
 });
 
-
 controller.hears(['greeting'], ['direct_message', 'direct_mention', 'mention'], luis.middleware.hereIntent, (bot, message) => {
     bot.reply(message, "Fala aee, to acordado!");
 });
