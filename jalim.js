@@ -1,6 +1,8 @@
 const Botkit = require('botkit');
 const luis = require('./luismiddleware');
-const request = require('request-promise');
+const { getHealthCheckStatus } = require('./Services/HealthCheckReader');
+const { getLogByQuery } = require('./Services/LogReader')
+
 require('dotenv').load();
 
 if (!process.env.SLACK_BOT_TOKEN) {
@@ -15,7 +17,7 @@ if (!process.env.LUIS_MODEL_URL) {
 
 const luisOptions = {
     serviceUri: process.env.LUIS_MODEL_URL,
-    minThreshold: 0.3
+    minThreshold: 0.4
 };
 
 const controller = Botkit.slackbot({
@@ -36,16 +38,28 @@ controller.middleware.receive.use(luis.middleware.receive(luisOptions));
 controller.hears(['applicationshealth'], ['direct_message', 'direct_mention', 'mention'], luis.middleware.hereIntent, (bot, message) => {
     bot.reply(message, 'Hmmmm, pera ae!')
 
-    request({ uri: 'https://split.braspag.com.br/api/healthcheck', json: true }).then((result) => {
-        bot.reply(message, `Olha o resultado da Split API: ${JSON.stringify(result)}`);
+    getHealthCheckStatus().then((result) => {
+        bot.reply(message, `Olha o resultado das aplicacoes: \`\`\` ${JSON.stringify(result)} \`\`\``);
     }).catch((err) => {
         bot.reply(message, `Ixi, nao consegui chamar o HealthCheck da SplitAPI: ${err.toString()}`);
-    });
+    })
 });
 
 controller.hears(['logquery'], ['direct_message', 'direct_mention', 'mention'], luis.middleware.hereIntent, (bot, message) => {
-    bot.reply(message, 'Marca ae que vou olhar o log')
-    bot.reply(message, `Segura ai os detalhes do requestId: ${message.entities[0].entity}`)
+    const entity = message.entities.find(x => x.type === 'SQL_QUERY')
+    const sqlQuery = message.text.substring(entity.startIndex, entity.endIndex + 1)
+
+    if (sqlQuery.toLowerCase().includes('where') == false)
+        bot.reply(message, 'Coloca um WHERE nessa query ai tiu')
+    else {
+        bot.reply(message, 'Marca ae que vou rodar isso no log')
+        getLogByQuery(sqlQuery).then((result) => {
+            bot.reply(message, `\`\`\` ${JSON.stringify(result)} \`\`\``)
+        }).catch((err) => {
+            console.log(err);
+            bot.reply(message, `Nao consegui consultar, seguem os detalhes do erro: ${JSON.stringify(err)}`)
+        })
+    }
 });
 
 controller.hears(['greeting'], ['direct_message', 'direct_mention', 'mention'], luis.middleware.hereIntent, (bot, message) => {
