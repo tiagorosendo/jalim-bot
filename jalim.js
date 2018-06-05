@@ -39,7 +39,12 @@ controller.hears(['applicationshealth'], ['direct_message', 'direct_mention', 'm
     bot.reply(message, 'Hmmmm, pera ae!')
 
     getHealthCheckStatus().then((result) => {
-        bot.reply(message, `Olha o resultado das aplicacoes: \`\`\` ${JSON.stringify(result)} \`\`\``);
+
+        if (result.every(x => x.result.IsHealthy === true))
+            bot.reply(message, `Olha o resultado das aplicacoes: \`\`\` ${JSON.stringify(result)} \`\`\``);
+        else
+            bot.reply(message, `Alguma(s) aplicacoes responderam que nao estao de boa: \`\`\` ${JSON.stringify(result)} \`\`\``);
+
     }).catch((err) => {
         bot.reply(message, `Ixi, nao consegui chamar o HealthCheck da SplitAPI: ${err.toString()}`);
     })
