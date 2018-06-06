@@ -17,7 +17,7 @@ if (!process.env.LUIS_MODEL_URL) {
 
 const luisOptions = {
     serviceUri: process.env.LUIS_MODEL_URL,
-    minThreshold: 0.4
+    minThreshold: 0.5
 };
 
 const controller = Botkit.slackbot({
@@ -39,7 +39,7 @@ controller.hears(['applicationshealth'], ['direct_message', 'direct_mention', 'm
     bot.reply(message, 'Hmmmm, pera ae!')
 
     getHealthCheckStatus().then((result) => {
-        
+
         if (result.some(x => x.result.IsHealthy === false))
             bot.reply(message, `Alguma(s) aplicacoes responderam que nao estao de boa: \`\`\` ${JSON.stringify(result)} \`\`\``);
         else
@@ -56,10 +56,26 @@ controller.hears(['logquery'], ['direct_message', 'direct_mention', 'mention'], 
 
     if (sqlQuery.toLowerCase().includes('where') == false)
         bot.reply(message, 'Coloca um WHERE nessa query ai tiu')
+    else if (sqlQuery.toLowerCase().includes('delete') ||
+        sqlQuery.toLowerCase().includes('insert') ||
+        sqlQuery.toLowerCase().includes('drop')) {
+
+        bot.reply(message, 'Ta achando que é malandro? vaza trouxa.')
+    }
     else {
         bot.reply(message, 'Marca ae que vou rodar isso no log')
+
         getLogByQuery(sqlQuery).then((result) => {
-            bot.reply(message, `\`\`\` ${JSON.stringify(result)} \`\`\``)
+            result.forEach(element => {
+                bot.reply(message, {
+                    attachments: [
+                        {
+                            title: element.MessageTemplate,
+                            text: JSON.stringify(element)
+                        }
+                    ]
+                })
+            });
         }).catch((err) => {
             console.log(err);
             bot.reply(message, `Nao consegui consultar, seguem os detalhes do erro: ${JSON.stringify(err)}`)
